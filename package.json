@@ -4,7 +4,7 @@
   "description": "WhatsApp Bot",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node Tayc.js",
     "dev": "nodemon index.js",
     "docker:build": "docker build -t knightbot .",
     "docker:run": "docker run -e SESSION_ID=$SESSION_ID Bwbbot"
