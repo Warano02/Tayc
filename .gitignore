@@ -1,0 +1,31 @@
+# Node dependencies
+node_modules/
+package-lock.json
+yarn.lock
+
+# Runtime data
+tmp/
+temp/
+.upm/
+session/
+
+# Session files
+Session/
+
+# Environment variables
+.env
+
+# Log files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
