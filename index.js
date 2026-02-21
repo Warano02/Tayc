@@ -5,13 +5,12 @@ const { execSync } = require('child_process');
 const obfuscator = require('javascript-obfuscator');
 
 const REPO = 'https://github.com/Warano02/f2bot.git';
-const TEMP_DIR = '.temp_clone';
+const TEMP_DIR = 'temp_clone';
 const ROOT = process.cwd();
 
-const KEEP = ['Tayc.js', "index.js", 'package.json', "session", 'node_modules', '.env', ".gitignore", ".vscode", "prompt.js"];
+const KEEP = ['Tayc.js',"src", "index.js", 'package.json', "session", 'node_modules', '.env', ".gitignore", ".vscode", "prompt.js"];
 
 function run(cmd, cwd = process.cwd(), silent = false) {
-    console.log(`> ${cmd}`);
     execSync(cmd, { stdio: silent ? 'ignore' : 'inherit', cwd });
 }
 
@@ -39,7 +38,7 @@ function obfuscateAllJS(dir) {
 
 function mergePackageJsons(tempPath) {
     const basePkg = require('./package.json');
-    const targetPkgPath = path.join(tempPath, 'package.json');
+    const targetPkgPath = path.join(ROOT, tempPath, 'package.json');
     const targetPkg = require(targetPkgPath);
 
     const mergedPkg = {
@@ -63,27 +62,25 @@ function cleanRootExcept(keepList) {
             try {
                 fse.removeSync(fullPath);
             } catch (err) {
-                console.warn(`⚠️ Failed to remove ${file}: ${err.message}`);
+                console.warn(` Failed to remove ${file}: ${err.message}`);
             }
         }
     });
 }
 
-// 🧠 Main async block
+
 (async () => {
-    console.log('\n📥 [TAYC-FAN] Start...');
+    console.log('\n [TAYC-FAN] Start...');
     run(`git clone ${REPO} ${TEMP_DIR}`, process.cwd(), true);
 
-    console.log('\n🔐 [TAYC] Download...');
+    console.log('\n [TAYC] Download...');
     obfuscateAllJS(TEMP_DIR);
 
-    console.log('\n📦 Copying cloned files to project root...');
     fse.copySync(TEMP_DIR, ROOT, { overwrite: true });
+    mergePackageJsons(TEMP_DIR);
 
     cleanRootExcept(KEEP);
 
-    console.log('\n📦 Merging package.json...');
-    mergePackageJsons(TEMP_DIR);
 
     const envPath = path.join(ROOT, '.env');
     if (!fs.existsSync(envPath)) {
@@ -121,6 +118,5 @@ function cleanRootExcept(keepList) {
     console.log('\n📦 Installing dependencies...');
     run('npm install');
 
-    console.log('\n🚀 All done!');
     run("npm start")
 })();
